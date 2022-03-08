@@ -3,7 +3,7 @@ import torch.nn as nn
 
 
 class DQNet(nn.Module):
-    def __init__(self, hiddenDim=128, hiddenLayers = 10):
+    def __init__(self, hiddenDim=128, hiddenLayers = 6):
         super(DQNet, self).__init__()
 
         self.firstLayer = nn.Linear(8, hiddenDim)

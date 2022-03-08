@@ -63,6 +63,7 @@ class AgentModule:
 
         if (random.random() < epsilon) and (not self.ValidationMode):
             action = random.choice(np.arange(4))
+
         else:
             state = torch.from_numpy(state).float().unsqueeze(0).to(self.device)
             self.net_eval.eval()
@@ -70,6 +71,7 @@ class AgentModule:
                 action_values = self.net_eval(state)
             self.net_eval.train()
             action = np.argmax(action_values.cpu().data.numpy())
+
 
         return action
 

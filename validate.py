@@ -33,12 +33,12 @@ def main():
     parser = argparse.ArgumentParser(description="Validation/Testing Script for Lunar Lander Simulation")
     parser.add_argument("--episodes", type=int, default=10, help="Number of episodes to train for")
     parser.add_argument("--cpu", type=bool, default=False, help="Uses CPU regardless of whether CUDA capable device is present")
-    parser.add_argument("--model_weights", type=str, default="SavedModels/LunarLanderModel.pt", help="Directory to Model weights")
+    parser.add_argument("--checkpoint", type=str, default="SavedModels/LunarLanderModel.pt", help="Directory to Model weights")
 
     args = parser.parse_args()
 
-    if not os.path.exists(args.model_weights):
-        raise FileNotFoundError(args.model_weights)
+    if not os.path.exists(args.checkpoint):
+        raise FileNotFoundError(args.checkpoint)
 
     if args.cpu:
         device = "cpu"
@@ -49,8 +49,8 @@ def main():
     logging.info("Created Lunar Lander Environment")
 
     agent = AgentModule(None, None, None, None, device, ValidationMode=True)
-    savedModel = torch.load(args.model_weights)
-    logging.info(f"Loaded Model Weights from {args.model_weights}")
+    savedModel = torch.load(args.checkpoint)
+    logging.info(f"Loaded Model Weights from {args.checkpoint}")
     agent.loadWeights(savedModel)
     scores = validate(env, agent, sessionCount=args.episodes)
     logging.info(f"Validation Completed, average score of {sum(scores) / args.episodes} over {args.episodes} episodes")
