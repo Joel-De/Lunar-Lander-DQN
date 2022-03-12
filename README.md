@@ -1,3 +1,5 @@
+![LunarLanderDemo](Assets/LunarLandingDemo.gif)
+
 Completes the Lunar lander environment by Open AI, using a reinforcement Double Deep Q-learning Network.
 
 ### Installation

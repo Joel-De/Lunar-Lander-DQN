@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 def train(enviornment, agent, episodes, valInterval, val, earlyStop):
     metrics = {"Train Episode": [], "Train Score": [], "50-Episode Average": []}
     displayTraining = False  # Option to show the environment while training, - greatly slows down training
-    eps = 1.0
-    epsEnd = 0.02
+    eps = 0.1
+    epsEnd = 0.05
     epsDecay = 0.995
     stepCount = 1000
 
@@ -47,7 +47,7 @@ def train(enviornment, agent, episodes, valInterval, val, earlyStop):
             metrics["50-Episode Average"].append(sum(metrics["Train Score"]) / len(metrics["Train Score"]))
         else:
             metrics["50-Episode Average"].append(sum(metrics["Train Score"][-50:]) / 50)
-        print(f"\rEpisode: {episode}\t Score: {score}\t50-Episode Average:{metrics['50-Episode Average'][-1]}", end='')
+        print(f"\rEpisode: {episode} Score: {round(score,3)} 50-Episode Average:{round(metrics['50-Episode Average'][-1],3)}", end='')
         if val and (episode % valInterval) == 0:
             print('\n')
             res = validate(enviornment, agent, 10)
@@ -56,6 +56,7 @@ def train(enviornment, agent, episodes, valInterval, val, earlyStop):
         if (earlyStop is not None) and (metrics["50-Episode Average"][-1] >= earlyStop):
             break
         eps = max(epsEnd, eps * epsDecay)  # Update epsilon
+        agent.stepScheduler()
     if displayTraining:
         enviornment.close()
 
@@ -66,7 +67,7 @@ def main():
     parser = argparse.ArgumentParser(description="Training Script for Lunar Lander Simulation")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch Size for training")
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate to be used")
-    parser.add_argument("--episodes", type=int, default=3000, help="Number of episodes to train for")
+    parser.add_argument("--episodes", type=int, default=4000, help="Number of episodes to train for")
     parser.add_argument("--val", type=bool, default=False, help="Whether to validate or not during training")
     parser.add_argument("--val_interval", type=int, default=100, help="Interval at which to perform validation")
     parser.add_argument("--save_metrics", type=bool, default=True, help="Whether to save training metrics")
@@ -74,7 +75,7 @@ def main():
     parser.add_argument("--cpu", type=bool, default=False,
                         help="Uses CPU regardless of whether CUDA capable device is present")
     parser.add_argument("--checkpoint", type=str, default=None, help="Location of pretrained saved checkpoints")
-    parser.add_argument("--early_stop", type=int, default=200, help="Threshold for 50 episode average after which training will stop ")
+    parser.add_argument("--early_stop", type=int, default=240, help="Threshold for 50 episode average after which training will stop ")
     args = parser.parse_args()
     saveDIR = "SavedModels"
     if not os.path.exists(os.path.join(_CURRDIR, saveDIR)):

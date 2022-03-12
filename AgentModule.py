@@ -54,6 +54,7 @@ class AgentModule:
             self.gamma = torch.FloatTensor([gamma]).to(self.device)
             self.tau = 1e-3
             self.optimizer = torch.optim.Adam(self.net_eval.parameters(), lr=learningRate)
+            self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=1000, gamma=0.5)
             self.criterion = torch.nn.MSELoss()
 
             # memory
@@ -88,6 +89,9 @@ class AgentModule:
     def loadWeights(self, model):
         self.net_target.load_state_dict(model)
         self.net_eval.load_state_dict(model)
+
+    def stepScheduler(self):
+        self.scheduler.step()
 
     def updateWeights(self, experiences):
         states, actions, rewards, next_states, ends = experiences
