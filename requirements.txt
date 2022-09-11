@@ -1,5 +1,4 @@
-gym==0.21.0
-numpy==1.22.2
+swig
+gym[box2d]
 pandas==1.4.1
-torch==1.10.2+cu113
-Box2D==2.3.10
+torch==1.12.1+cu116

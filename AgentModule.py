@@ -66,7 +66,7 @@ class AgentModule:
             action = random.choice(np.arange(4))
 
         else:
-            state = torch.from_numpy(state).float().unsqueeze(0).to(self.device)
+            state = torch.tensor(state, dtype=torch.float32).float().unsqueeze(0).to(self.device)
             self.net_eval.eval()
             with torch.no_grad():
                 action_values = self.net_eval(state)
